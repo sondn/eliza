@@ -1,3 +1,4 @@
+import { samplePlugin } from "@elizaos/plugin-mirailabs";
 import { PGLiteDatabaseAdapter } from "@elizaos/adapter-pglite";
 import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
 import { QdrantDatabaseAdapter } from "@elizaos/adapter-qdrant";
@@ -1018,6 +1019,7 @@ export async function createAgent(
         character,
         // character.plugins are handled when clients are added
         plugins: [
+            samplePlugin,
             parseBooleanFromText(getSecret(character, "BITMIND")) &&
             getSecret(character, "BITMIND_API_TOKEN")
                 ? bittensorPlugin
