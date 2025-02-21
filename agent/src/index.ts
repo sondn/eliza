@@ -1,4 +1,4 @@
-import { samplePlugin } from "@elizaos/plugin-mirailabs";
+import { partnrPlugin } from "@elizaos/plugin-partnr";
 import { PGLiteDatabaseAdapter } from "@elizaos/adapter-pglite";
 import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
 import { QdrantDatabaseAdapter } from "@elizaos/adapter-qdrant";
@@ -1019,7 +1019,10 @@ export async function createAgent(
         character,
         // character.plugins are handled when clients are added
         plugins: [
-            samplePlugin,
+            getSecret(character, "PARTNR_API_KEY") &&
+            getSecret(character, "PARTNR_SECRET_KEY")
+                ? partnrPlugin
+                : null,
             parseBooleanFromText(getSecret(character, "BITMIND")) &&
             getSecret(character, "BITMIND_API_TOKEN")
                 ? bittensorPlugin
