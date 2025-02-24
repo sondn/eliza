@@ -57,12 +57,6 @@ export const createVault: Action = {
                 template: createVaultTemplate,
             });
 
-            // var content = await generateObjectDeprecated({
-            //     runtime,
-            //     context,
-            //     modelClass: ModelClass.SMALL,
-            // });
-
             const vaultDetails = await generateObject({
                 runtime,
                 context,
@@ -93,16 +87,11 @@ export const createVault: Action = {
 
             return true;
         } catch (error) {
-            elizaLogger.error("Error executing EXECUTE_CREATE_VAULT:", {
-                content,
-                message: error.message,
-                code: error.code,
-            });
+            elizaLogger.error("Error executing EXECUTE_CREATE_VAULT:", error);
             if (callback) {
                 callback({
-                    text: `Error executing EXECUTE_CREATE_VAULT: ${error.message}`,
-                    content: { error: error.message },
-                });
+                    text: `Error executing EXECUTE_CREATE_VAULT: ${error.message}`
+                }, []);
             }
             return false;
         }
