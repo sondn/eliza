@@ -13,23 +13,22 @@ import {
 import { PartnrService } from "../services";
 import { CreateVaultSchema } from "../types";
 
-const createVaultTemplate = `Look at your LAST RESPONSE in the conversation where you confirmed a create vault request.
-Based on ONLY that last message, extract the trading details:
+const createVaultTemplate = `
+Extract the following details to create a new Vault:
+- **name** (string): Name of the Vault
+- **description** (string): Description of the resource
 
-Create Vault must include USDT or BUSD or USDC. For example:
-- For "create vault SOL and USDC" -> use pool "SOL-USDC" as name
-- For "create vault ETH and USDC" -> use pool "ETH-USDC" as name
-- For "create vault BNB and USDC" -> use pool "BNB-USDC" as name
+Provide the values in the following JSON format:
 
 \`\`\`json
 {
-    "name": "<pair with stable coin>",
-    "tokenAddress": "<token address from your last response>"
+    "name": "<vault_name>"
 }
 \`\`\`
 
-Recent conversation:
-{{recentMessages}}`;
+Here are the recent user messages for context:
+{{recentMessages}}
+`;
 
 export const createVault: Action = {
     name: "EXECUTE_CREATE_VAULT",
@@ -51,62 +50,57 @@ export const createVault: Action = {
         _options: Record<string, unknown>,
         callback?: HandlerCallback
     ): Promise<boolean> => {
-        let content;
+        elizaLogger.log("Starting Partnr EXECUTE_CREATE_VAULT handler...");
         try {
-            let currentState = state;
-            if (!currentState) {
-                currentState = await runtime.composeState(message);
-            } else {
-                currentState = await runtime.updateRecentMessageState(currentState);
-            }
-
             const context = composeContext({
-                state: currentState,
+                state: state,
                 template: createVaultTemplate,
             });
 
-            content = await generateObjectDeprecated({
+            // var content = await generateObjectDeprecated({
+            //     runtime,
+            //     context,
+            //     modelClass: ModelClass.SMALL,
+            // });
+
+            const vaultDetails = await generateObject({
                 runtime,
                 context,
                 modelClass: ModelClass.SMALL,
+                schema: CreateVaultSchema,
             });
 
-            // Convert quantity to number if it's a string
-            if (content && typeof content.quantity === "string") {
-                content.quantity = Number.parseFloat(content.quantity);
-            }
+            // const service = new PartnrService({
+            //     apiKey: runtime.getSetting("PARTNR_API_KEY"),
+            //     secretKey: runtime.getSetting("PARTNR_SECRET_KEY"),
+            // });
 
-            const parseResult = CreateVaultSchema.safeParse(content);
-            if (!parseResult.success) {
-                throw new Error(
-                    `Invalid create vault content: ${JSON.stringify(parseResult.error.errors, null, 2)}`
-                );
-            }
+            // const createResult = await service.createVault(content);
 
-            const service = new PartnrService({
-                apiKey: runtime.getSetting("PARTNR_API_KEY"),
-                secretKey: runtime.getSetting("PARTNR_SECRET_KEY"),
-            });
-
-            const createResult = await service.createVault(content);
+            // persist relevant data if needed to memory/knowledge
+            // const memory = {
+            //     type: "vault",
+            //     content: vaultDetails.object,
+            //     timestamp: new Date().toISOString()
+            // };
+            // await runtime.storeMemory(memory);
 
             if (callback) {
                 callback({
-                    text: `Successfully create vault with message: ${createResult.message}`,
-                    content: createResult,
-                });
+                    text: `Successfully create vault with - Name: ${vaultDetails.object.name}`,
+                }, []);
             }
 
             return true;
         } catch (error) {
-            elizaLogger.error("Error executing trade:", {
+            elizaLogger.error("Error executing EXECUTE_CREATE_VAULT:", {
                 content,
                 message: error.message,
                 code: error.code,
             });
             if (callback) {
                 callback({
-                    text: `Error executing trade: ${error.message}`,
+                    text: `Error executing EXECUTE_CREATE_VAULT: ${error.message}`,
                     content: { error: error.message },
                 });
             }
@@ -118,44 +112,27 @@ export const createVault: Action = {
             {
                 user: "{{user1}}",
                 content: {
-                    text: "Create vault with USDC pair",
+                    text: "Create a new Vault with the name 'Vault1'",
                 },
             },
             {
-                user: "{{agent}}",
+                user: "{{agentName}}",
                 content: {
-                    text: "What chain you want for create new Vault?",
+                    text: `Successfully create vault with - Name: Vault1`,
                 },
             },
-            {
-                user: "{{user1}}",
-                content: {
-                    text: "BSC",
-                },
-            },
-            {
-                user: "{{agent}}",
-                content: {
-                    text: "What tokenAddress to create vault with USDC token?",
-                },
-            },
+        ],
+        [
             {
                 user: "{{user1}}",
                 content: {
-                    text: "0x96Be0FBbfb126063Eb27bea4F34E096fa661fC9e",
+                    text: "Create a new Vault with the name 'Vault2'",
                 },
             },
             {
-                user: "{{agent}}",
+                user: "{{agentName}}",
                 content: {
-                    text: "I'll execute a create vault HINAGI-USDC pair, HINAGI from address 0x96Be0FBbfb126063Eb27bea4F34E096fa661fC9e",
-                    action: "EXECUTE_CREATE_VAULT",
-                },
-            },
-            {
-                user: "{{agent}}",
-                content: {
-                    text: "Successfully create vault with message: OK",
+                    text: `Successfully create vault with - Name: Vault2`,
                 },
             },
         ],

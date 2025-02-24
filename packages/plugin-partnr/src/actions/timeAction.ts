@@ -1,5 +1,6 @@
 import {
     type Action,
+    type ActionExample,
     type IAgentRuntime,
     type Memory,
     type HandlerCallback,
@@ -13,12 +14,6 @@ import {
     elizaLogger,
 } from "@elizaos/core";
 
-
-const timeValidate: Validator = async(_runtime: IAgentRuntime, message: Memory, _state?: State) => {
-    
-    return true;
-    //return message.text.toLowerCase().includes("time");
-};
 const timeHandler: Handler = async (
         runtime: IAgentRuntime,
         _message: Memory,
@@ -26,6 +21,7 @@ const timeHandler: Handler = async (
         _options?: object,
         callback?: HandlerCallback
     ) => {
+            elizaLogger.log("Starting Partnr GET_CURRENT_TIME handler...");
             try {
                 const now = new Date();
                 const response: Content = {
@@ -36,17 +32,50 @@ const timeHandler: Handler = async (
                 }
             } catch (error) {
                 elizaLogger.error("Error creating resource:", error);
-                // var responseContent = Content({ text: `Failed to create resource. Please check the logs.` });
-                // callback( responseContent, [] );
+                var responseError = Content({ text: `Failed to create resource. Please check the logs.` });
+                callback( responseError );
             }
 };
 
 
 export const timeAction: Action = {
-    name: "getTime",
+    name: "GET_CURRENT_TIME",
     description: "Returns the current time",
-    similes: ["current time", "now", "what time is it"],
-    examples: [],
+    similes: ["CURRENT_TIME", "NOW", "WHAT_TIME"],
     handler: timeHandler,
-    validate: timeValidate,
+    validate: async (runtime, _message) => {
+        return true;
+    },
+    examples: [
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "current time",
+                },
+            },
+            {
+                user: "{{agentName}}",
+                content: {
+                    text: "The current time is 2025-02-24 15:00:00GMT+07",
+                    action: "GET_CURRENT_TIME"
+                },
+            },
+        ],
+        [
+            {
+                user: "{{user1}}",
+                content: {
+                    text: "what is current time",
+                },
+            },
+            {
+                user: "{{agentName}}",
+                content: {
+                    text: "The current time is 2025-02-24 15:00:00GMT+07",
+                    action: "GET_CURRENT_TIME"
+                },
+            },
+        ],
+    ] as ActionExample[][]
 };

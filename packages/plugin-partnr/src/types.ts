@@ -11,8 +11,6 @@ export interface PartnrConfig {
 // TODO: Validate data
 export const CreateVaultSchema = z.object({
     name: z.string().min(1).toUpperCase(),
-    tokenAddress: z.string().min(1),
-    webhookUrl: z.string().min(1),
 });
 
 // Inferred types from schemas
