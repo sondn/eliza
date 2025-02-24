@@ -2,6 +2,7 @@ import {
     type ActionExample,
     composeContext,
     elizaLogger,
+    generateObject,
     generateObjectDeprecated,
     type HandlerCallback,
     type IAgentRuntime,
