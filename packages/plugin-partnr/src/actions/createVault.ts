@@ -14,21 +14,39 @@ import {
 import { PartnrService } from "../services";
 import { CreateVaultSchema } from "../types";
 
+export interface CreateVaultContent extends Content {
+    name: string;
+    logo: string;
+    symbol: string;
+    description: string;
+}
+
+
+
 const createVaultTemplate = `
-Extract the following details to create a new Vault:
-- **name** (string): Name of the Vault
-- **description** (string): Description of the resource
+
+{{recentMessages}}
+
+Given the recent messages, extract the following information about the requested vault creation:
+
+- Vault name
+- Vault symbol
+- Vault logo
+- Vault description
+
+User need provide full informations with vault name, logo, symbol and description. If not, ask them for missing informations.
+Asking user to confirm provided data, and need user confirm before executing action create vault.
 
 Provide the values in the following JSON format:
 
 \`\`\`json
 {
-    "name": "<vault_name>"
+    "name": "Vault name",
+    "symbol": "Vault symbol",
+    "logo": "Vault logo",
+    "description": "Vault description"
 }
 \`\`\`
-
-Here are the recent user messages for context:
-{{recentMessages}}
 `;
 
 export const createVault: Action = {
@@ -40,7 +58,6 @@ export const createVault: Action = {
     description: "Execute create new Vault on Partnr",
     validate: async (runtime: IAgentRuntime) => {
         return !!(
-            runtime.getSetting("PARTNR_API_KEY") &&
             runtime.getSetting("PARTNR_SECRET_KEY")
         );
     },
@@ -53,17 +70,43 @@ export const createVault: Action = {
     ): Promise<boolean> => {
         elizaLogger.log("Starting Partnr EXECUTE_CREATE_VAULT handler...");
         try {
-            const context = composeContext({
-                state: state,
+            // Initialize or update state
+            let currentState: State;
+            if (!state) {
+                currentState = (await runtime.composeState(message)) as State;
+            } else {
+                currentState = await runtime.updateRecentMessageState(state);
+            }
+
+            // Compose transfer context
+            const transferContext = composeContext({
+                state: currentState,
                 template: createVaultTemplate,
             });
 
-            const vaultDetails = await generateObject({
+            // Generate transfer content
+            const content = await generateObject({
                 runtime,
-                context,
+                context: transferContext,
                 modelClass: ModelClass.SMALL,
                 schema: CreateVaultSchema,
             });
+
+            const payload = content.object as CreateVaultContent;
+            const isCreateVaultContent =
+                payload.name && payload.logo && payload.symbol && payload.description;
+
+            // Validate transfer content
+            if (!isCreateVaultContent) {
+                elizaLogger.error("Invalid content for EXECUTE_CREATE_VAULT action.");
+                if (callback) {
+                    callback({
+                        text: "Unable to process transfer request. Invalid content provided.",
+                        content: { error: "Invalid content" },
+                    });
+                }
+                return false;
+            }
 
             // const service = new PartnrService({
             //     apiKey: runtime.getSetting("PARTNR_API_KEY"),
@@ -82,7 +125,7 @@ export const createVault: Action = {
 
             if (callback) {
                 callback({
-                    text: `Successfully create vault with - Name: ${vaultDetails.object.name}`,
+                    text: `Successfully create vault with - Name: ${payload.name}`,
                 }, []);
             }
 
@@ -102,13 +145,13 @@ export const createVault: Action = {
             {
                 user: "{{user1}}",
                 content: {
-                    text: "Create a new Vault with the name 'Vault1'",
+                    text: "Create a vault name TESTVAULT with symbol USDT logo 'https://example.com' and description 'Test vault description'",
                 },
             },
             {
                 user: "{{agentName}}",
                 content: {
-                    text: `Successfully create vault with - Name: Vault1`,
+                    text: `Successfully create vault with - Name: TESTVAULT`,
                 },
             },
         ],
@@ -116,13 +159,13 @@ export const createVault: Action = {
             {
                 user: "{{user1}}",
                 content: {
-                    text: "Create a new Vault with the name 'Vault2'",
+                    text: "Create a vault name TESTVAULT2 with symbol USDT, description 'Test vault description' and logo 'https://example.com/'",
                 },
             },
             {
                 user: "{{agentName}}",
                 content: {
-                    text: `Successfully create vault with - Name: Vault2`,
+                    text: `Successfully create vault with - Name: TESTVAULT2`,
                 },
             },
         ],

@@ -10,7 +10,13 @@ export interface PartnrConfig {
 
 // TODO: Validate data
 export const CreateVaultSchema = z.object({
-    name: z.string().min(1).toUpperCase(),
+    name: z.string().min(1, { message: "Vault name is required." }),
+    symbol: z.string().min(1, { message: "Vault symbol is required." }).toUpperCase(),
+    logo: z.string().min(1, { message: "Vault logo is required." }),
+    description: z.string().min(1, { message: "Vault description is required." }),
+    // chainId: z.string().min(1, { message: "ChainID name is required." }),
+    // tokenId: z.string().min(1, { message: "TokenID is required." }),
+    //contractAddress: z.string().min(1).toUpperCase(),
 });
 
 // Inferred types from schemas

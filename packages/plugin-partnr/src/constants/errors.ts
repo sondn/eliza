@@ -10,6 +10,5 @@ export const ERROR_MESSAGES = {
 } as const;
 
 export const VALIDATION_ERRORS = {
-    MISSING_API_KEY: "PARTNR_API_KEY is required but not configured",
     MISSING_SECRET_KEY: "PARTNR_SECRET_KEY is required but not configured",
 } as const;

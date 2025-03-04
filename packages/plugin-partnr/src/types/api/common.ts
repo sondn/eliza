@@ -42,3 +42,23 @@ export interface Vault {
     totalWithdrawals: string;
     totalUsers: string;
 }
+
+export interface DepositRule {
+    min: number;
+    max: number;
+}
+
+export interface WithdrawTerm {
+    lockUpPeriod: number;
+    delay: number;
+}
+
+export interface Fee {
+    performanceFee: number;
+    recipientAddress: number;
+}
+
+export interface DepositInit {
+    networkId: string;
+    amountDeposit: number;
+}

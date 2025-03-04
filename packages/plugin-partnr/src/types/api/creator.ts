@@ -3,11 +3,12 @@
  */
 export interface CreateVaultRequest {
     name: string;
-    webhookUrl: string;
-    token: TokenAddress;
-    chainId: number;
-    tokenAddress: string;
-    protocolIds: string[];
+    symbol: string;
+    logo: string;
+    description: string;
+    tokenId: string;
+    chainId: string;
+    contractAddress: string;
 }
 
 /**

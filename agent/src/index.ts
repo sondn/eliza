@@ -1019,7 +1019,6 @@ export async function createAgent(
         character,
         // character.plugins are handled when clients are added
         plugins: [
-            getSecret(character, "PARTNR_API_KEY") &&
             getSecret(character, "PARTNR_SECRET_KEY")
                 ? partnrPlugin
                 : null,

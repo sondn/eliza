@@ -1,5 +1,5 @@
 export const API_DEFAULTS = {
-    BASE_URL: "https://ai-agent.mirailabs.co",
+    BASE_URL: "https://vault-api-dev.partnr.xyz",
     TIMEOUT: 30000, // 30 seconds
     RATE_LIMIT: {
         MAX_REQUESTS_PER_MINUTE: 1200,
