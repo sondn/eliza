@@ -9,14 +9,20 @@ export class CreatorService extends BaseService {
     /**
      * Create a Vault
      */
-    async createVault(request: CreateVaultRequest): Promise<CreateVaultResponse> {
+    async createVault(request: CreateVaultRequest, accessToken: string): Promise<CreateVaultResponse> {
         try {
-            // TODO: Call Partnr API and response data
-            // this.validateCredentials();
-            return {
-                success: true,
-                message: "OK",
-            };
+            const response = await axios.post(
+                this.config.baseURL + `${API_ENDPOINTS.CREATE_VAULT}`,
+                request,
+                {
+                    headers: {
+                        accept: "application/json",
+                        Authorization: "Bearer " + accessToken
+                    },
+                }
+            );
+            console.log(request, response);
+            return response.data;
         } catch (error) {
             throw this.handleError(error, request.name);
         }

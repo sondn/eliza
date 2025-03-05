@@ -19,34 +19,34 @@ export interface CreateVaultContent extends Content {
     logo: string;
     symbol: string;
     description: string;
+    chainId: string;
 }
 
+const createVaultTemplate = `Respond with a JSON markdown block containing only the extracted values. Come up for any values that cannot be determined.
 
-
-const createVaultTemplate = `
-
-{{recentMessages}}
-
-Given the recent messages, extract the following information about the requested vault creation:
-
-- Vault name
-- Vault symbol
-- Vault logo
-- Vault description
-
-User need provide full informations with vault name, logo, symbol and description. If not, ask them for missing informations.
-Asking user to confirm provided data, and need user confirm before executing action create vault.
-
-Provide the values in the following JSON format:
-
+Example response:
 \`\`\`json
 {
+    "chainId": "Vault chainId",
+    "tokenId": "Vault tokenId",
     "name": "Vault name",
     "symbol": "Vault symbol",
     "logo": "Vault logo",
     "description": "Vault description"
 }
 \`\`\`
+
+{{recentMessages}}
+Given the recent messages, extract (come up with if not included) the following information about the requested vault creation:
+
+- Vault chainId
+- Vault tokenId
+- Vault name
+- Vault symbol
+- Vault logo
+- Vault description
+
+Respond with a JSON markdown block containing only the extracted values.
 `;
 
 export const createVault: Action = {
@@ -55,10 +55,10 @@ export const createVault: Action = {
         "CREATE_VAULT",
         "NEW_VAULT",
     ],
-    description: "Execute create new Vault on Partnr",
+    description: "Execute create new Vault on Partnr. Requires vault chainId, tokenId, name, symbol, logo and description.",
     validate: async (runtime: IAgentRuntime) => {
         return !!(
-            runtime.getSetting("PARTNR_SECRET_KEY")
+            runtime.getSetting("PARTNR_EVM_PRIVATE_KEY")
         );
     },
     handler: async (
@@ -68,7 +68,7 @@ export const createVault: Action = {
         _options: Record<string, unknown>,
         callback?: HandlerCallback
     ): Promise<boolean> => {
-        elizaLogger.log("Starting Partnr EXECUTE_CREATE_VAULT handler...");
+        elizaLogger.info("Starting Partnr EXECUTE_CREATE_VAULT handler...");
         try {
             // Initialize or update state
             let currentState: State;
@@ -108,20 +108,13 @@ export const createVault: Action = {
                 return false;
             }
 
+            elizaLogger.info(payload);
+
             // const service = new PartnrService({
-            //     apiKey: runtime.getSetting("PARTNR_API_KEY"),
-            //     secretKey: runtime.getSetting("PARTNR_SECRET_KEY"),
+            //     evmPrivateKey: runtime.getSetting("PARTNR_EVM_PRIVATE_KEY"),
             // });
 
             // const createResult = await service.createVault(content);
-
-            // persist relevant data if needed to memory/knowledge
-            // const memory = {
-            //     type: "vault",
-            //     content: vaultDetails.object,
-            //     timestamp: new Date().toISOString()
-            // };
-            // await runtime.storeMemory(memory);
 
             if (callback) {
                 callback({
@@ -141,6 +134,112 @@ export const createVault: Action = {
         }
     },
     examples: [
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "Create new vault"
+                }
+            },
+            {
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "Please select chain you want.",
+                    "action": "EXECUTE_LIST_CHAIN"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "BSC"
+                }
+            },
+            {
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "Please select token you want.",
+                    "action": "EXECUTE_LIST_TOKEN"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "USDT"
+                }
+            },
+            {
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "chainId as BSC, symbol as USDT, next what is name, logo and description of your Vault?"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "name as TESTVAULT, logo https://example.com/img.png, description as Demo"
+                }
+            },
+            {
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "Successfully create vault with - Name: TESTVAULT",
+                    "action": "EXECUTE_CREATE_VAULT"
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "Create vault"
+                }
+            },
+            {
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "Please select chain you want.",
+                    "action": "EXECUTE_LIST_CHAIN"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "BSC"
+                }
+            },
+            {
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "Please select token you want.",
+                    "action": "EXECUTE_LIST_TOKEN"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "USDT"
+                }
+            },
+            {
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "chainId as BSC, symbol as USDT, next what is name, logo and description of your Vault?"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "name as TESTVAULT, logo https://example.com/img.png, description as Demo"
+                }
+            },
+            {
+                "user": "{{agentName}}",
+                "content": {
+                    "text": "Successfully create vault with - Name: TESTVAULT",
+                    "action": "EXECUTE_CREATE_VAULT"
+                }
+            }
+        ],
         [
             {
                 user: "{{user1}}",

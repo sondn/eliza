@@ -3,9 +3,9 @@ import { z } from "zod";
 
 // Base configuration types
 export interface PartnrConfig {
-    apiKey?: string;
-    secretKey?: string;
-    baseURL?: string;
+    evmPrivateKey?: string;
+    solanaPrivateKey?: string;
+    baseURL: string;
 }
 
 // TODO: Validate data
@@ -17,6 +17,10 @@ export const CreateVaultSchema = z.object({
     // chainId: z.string().min(1, { message: "ChainID name is required." }),
     // tokenId: z.string().min(1, { message: "TokenID is required." }),
     //contractAddress: z.string().min(1).toUpperCase(),
+});
+
+export const ListChainSchema = z.object({
+    //chainType: z.string().min(1, { message: "ChainType is required." }),
 });
 
 // Inferred types from schemas

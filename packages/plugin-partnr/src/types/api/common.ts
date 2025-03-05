@@ -1,23 +1,42 @@
 export interface TokenAddress {
-    tokenId: string;
-    symbol: string;
+    id: string;
     name: string;
-    image: string;
+    symbol: string;
     address: string;
+    logo: string;
     decimals: number;
+    chainId: string;
+    protocol: string;
+    assetId: string;
+    createdAt: string;
 }
 export interface Creator {
     address: string;
-    chainType: "EVM" | "NON_EVM";
+    chainType: "EVM" | "SOLANA" | "APTOS" | "TON";
     name: string;
 }
 
+export interface Currency {
+    name: string;
+    symbol: string;
+    decimals: number;
+}
 export interface Chain {
     id: string;
+    chainId: number;
+    chainType: "EVM" | "SOLANA" | "APTOS" | "TON";
     name: string;
-    image: string;
-    explorer: string;
-    chainType: "EVM" | "NON_EVM";
+    shortName: string;
+    logo: string;
+    rpc: string[];
+    tokenStandard: string;
+    durableBlockConfirmations: number;
+    type: "mainnet" | "testnet";
+    nativeCurrency: Currency;
+    explorers: string[];
+    defaultEnableNative: boolean;
+    skipDefaultGasForNative: boolean;
+    status: number;
 }
 
 export interface Protocol {

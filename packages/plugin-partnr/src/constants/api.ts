@@ -9,14 +9,6 @@ export const API_DEFAULTS = {
 
 export const API_ENDPOINTS = {
     CREATOR_CREATE: "/creator/create",
+    CHAIN_LIST: "/api/chain",
+    TOKEN_LIST: "/api/token",
 };
-
-export const CHAIN_IDS = {
-    BSC: 56,
-    ETHEREUM: 1,
-} as const;
-
-export const PROTOCOL_IDS = {
-    VENUS: "Venus",
-    UNISWAP: "Uniswap",
-} as const;

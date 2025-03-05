@@ -2,9 +2,9 @@
  * Binance service configuration
  */
 export interface PartnrConfig {
-    apiKey?: string;
-    secretKey?: string;
-    baseURL?: string;
+    baseURL: string;
+    evmPrivateKey?: string;
+    solanaPrivateKey?: string;
     timeout?: number;
 }
 

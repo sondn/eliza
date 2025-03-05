@@ -28,12 +28,164 @@
     ],
     "knowledge": [
         "Create Vault",
+        "List Supported Chain",
         "Creative problem-solving",
         "Protective services",
         "Loyal assistance",
         "Unconventional solutions"
     ],
     "messageExamples": [
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "List chains"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Please select chain you want.",
+                    "action": "EXECUTE_LIST_CHAIN"
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "List tokens"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Please select token you want.",
+                    "action": "EXECUTE_LIST_TOKEN"
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "List tokens"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Please select token you want.",
+                    "action": "EXECUTE_LIST_TOKEN"
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "Create new vault"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Please select chain you want.",
+                    "action": "EXECUTE_LIST_CHAIN"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "BSC"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Please select token you want.",
+                    "action": "EXECUTE_LIST_TOKEN"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "USDT"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "chainId as BSC, symbol as USDT, next what is name, logo and description of your Vault?"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "name as TESTVAULT, symbol USDT, logo https://example.com/img.png, description as Demo"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Successfully create vault with - Name: TESTVAULT",
+                    "action": "EXECUTE_CREATE_VAULT"
+                }
+            }
+        ],
+        [
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "Create vault"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Please select chain you want.",
+                    "action": "EXECUTE_LIST_CHAIN"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "BSC"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Please select token you want.",
+                    "action": "EXECUTE_LIST_TOKEN"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "USDT"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "chainId as BSC, symbol as USDT, next what is name, logo and description of your Vault?"
+                }
+            },
+            {
+                "user": "{{user1}}",
+                "content": {
+                    "text": "name as TESTVAULT, symbol USDT, logo https://example.com/img.png, description as Demo"
+                }
+            },
+            {
+                "user": "Partnr",
+                "content": {
+                    "text": "Successfully create vault with - Name: TESTVAULT",
+                    "action": "EXECUTE_CREATE_VAULT"
+                }
+            }
+        ],
         [
             {
                 "user": "{{user1}}",
