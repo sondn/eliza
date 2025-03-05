@@ -17,6 +17,7 @@
   "packageManager": "pnpm@10.4.1",
   "dependencies": {
     "@elizaos/core": "workspace:*",
+    "@ethersproject/strings": "^5.8.0",
     "@ethersproject/wallet": "^5.7.0",
     "axios": "^1.8.1"
   },

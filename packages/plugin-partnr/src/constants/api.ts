@@ -11,4 +11,6 @@ export const API_ENDPOINTS = {
     CREATOR_CREATE: "/creator/create",
     CHAIN_LIST: "/api/chain",
     TOKEN_LIST: "/api/token",
+    AUTH_GET_CHALLENGE: "/api/auth/challengeCode/",
+    AUTH_LOGIN: "/api/auth/login",
 };

@@ -1,7 +1,7 @@
 import { ERROR_MESSAGES } from "../constants/errors";
 import type { ListChainRequest, ListChainResponse } from "../types/api/chain";
 import { BaseService } from "./base";
-import { API_DEFAULTS, API_ENDPOINTS } from "../constants/api";
+import { API_ENDPOINTS } from "../constants/api";
 import axios from "axios";
 
 /**

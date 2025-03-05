@@ -4125,6 +4125,9 @@ importers:
       '@elizaos/core':
         specifier: workspace:*
         version: link:../core
+      '@ethersproject/strings':
+        specifier: ^5.8.0
+        version: 5.8.0
       '@ethersproject/wallet':
         specifier: ^5.7.0
         version: 5.8.0
